@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CV - Ceyhun Qasimov</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f0f0;
+    }
+    .resume {
+      display: flex;
+      max-width: 1000px;
+      margin: 30px auto;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .sidebar {
+      width: 30%;
+      background-color: #0b3d5c;
+      color: white;
+      padding: 20px;
+    }
+    .sidebar h2, .content h2 {
+      cursor: pointer;
+      padding-bottom: 5px;
+      margin-top: 20px;
+      border-bottom: 1px solid #ccc;
+    }
+    .section {
+      display: none;
+    }
+    .profile-photo {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .profile-photo img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      object-fit: cover;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+    .content {
+      width: 70%;
+      padding: 30px;
+      color: #333;
+    }
+    h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+    h3 {
+      margin-top: 5px;
+      color: #555;
+    }
+    input, select {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+    }
+    button {
+      padding: 8px 12px;
+      background-color: #0b3d5c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+    button:hover {
+      background-color: #094266;
+    }
+    .new-entry {
+      margin-bottom: 10px;
+    }
+    .new-entry input {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="resume">
+    <aside class="sidebar">
+      <div class="profile-photo">
+        <img src="1-intro-photo-final.jpg" alt="Profile Photo">
+      </div>
+
+      <h2 onclick="toggleSection('contact-list')">CONTACT</h2>
+      <ul class="contact section" id="contact-list"></ul>
+
+      <h2 onclick="toggleSection('education-list')">EDUCATION</h2>
+      <div class="section" id="education-list"></div>
+      <button onclick="addDropdown('education-list', 'Education')">Add Education</button>
+
+      <h2 onclick="toggleSection('skills-list')">SKILLS</h2>
+      <ul class="skills section" id="skills-list"></ul>
+      <button onclick="addDropdown('skills-list', 'Skill')">Add Skill</button>
+
+      <h2 onclick="toggleSection('languages-list')">LANGUAGES</h2>
+      <ul class="skills section" id="languages-list"></ul>
+    </aside>
+
+    <main class="content">
+      <h1><strong>CEYHUN</strong> QASIMOV</h1>
+      <h3>WEB-DESIGNER</h3>
+
+      <section>
+        <h2 onclick="toggleSection('profile-section')">PROFILE</h2>
+        <p class="section" id="profile-section"></p>
+      </section>
+
+      <section>
+        <h2 onclick="toggleSection('work-list')">WORK EXPERIENCE</h2>
+        <div class="section" id="work-list"></div>
+        <button onclick="addDropdown('work-list', 'Work')">Add Work</button>
+      </section>
+
+      <section>
+        <h2 onclick="toggleSection('reference-list')">REFERENCE</h2>
+        <div class="section" id="reference-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // DATA CONSTANTS
+    const contactInfo = [
+      "📞 +094 555 55 55",
+      "✉️ esmerseyidova11@gmail.com",
+      "🌐 www.esy.com",
+      "📍 Baku ,Azerbaijan"
+    ];
+
+    const educationInfo = [
+      { years: "2024 – 2028", school: "Azerbaijan Technical University" },
+      { years: "2029 – 2033", school: "Business University" }
+    ];
+
+    const skills = ["Design", "Public Relations", "Teamwork", "Communication", "Critical Thinking"];
+
+    const languages = ["English (Fluent)", "Turkish (Advanced)"];
+
+    const profileText = `As a fresh university graduate with a degree in Web Development and Design, 
+    I am enthusiastic about merging creativity with technology to produce impactful web solutions...`;
+
+    const workExperience = [
+      {
+        title: "Intern - Web Design Assistant – DESIGNER & Specialist",
+        years: "2025 – Present",
+        details: [
+          "Created mockups and prototypes for various projects.",
+          "Collaborated with senior designers to optimize website layouts.",
+          "Worked on SEO principles to improve rankings."
+        ]
+      },
+      {
+        title: "Azercell – Freelance Web Designer",
+        years: "2026 – 2027",
+        details: [
+          "Designed responsive websites for local businesses.",
+          "Integrated e-commerce platforms and optimized for mobile."
+        ]
+      }
+    ];
+
+    const references = [
+      { name: "Aidan Valiyeva", title: "CTO, Wonder Inc.", email: "aiityv@email.com" },
+      { name: "Oguz Seidov", title: "CEO, Wonder Inc.", email: "oguz@email.com" }
+    ];
+
+    // RENDER FUNCTIONS
+    window.onload = function () {
+      renderList('contact-list', contactInfo, 'li');
+      renderEducation();
+      renderList('skills-list', skills, 'li');
+      renderList('languages-list', languages, 'li');
+      document.getElementById('profile-section').innerText = profileText;
+      renderWorkExperience();
+      renderReferences();
+    };
+
+    function toggleSection(id) {
+      const section = document.getElementById(id);
+      section.style.display = section.style.display === "none" ? "block" : "none";
+    }
+
+    function renderList(containerId, data, elementType) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      data.forEach(item => {
+        const el = document.createElement(elementType);
+        el.innerText = item;
+        container.appendChild(el);
+      });
+    }
+
+    function renderEducation() {
+      const container = document.getElementById('education-list');
+      container.innerHTML = '';
+      educationInfo.forEach(edu => {
+        const p = document.createElement('p');
+        p.innerHTML = `<strong>${edu.years}</strong><br>${edu.school}`;
+        container.appendChild(p);
+      });
+    }
+
+    function renderWorkExperience() {
+      const container = document.getElementById('work-list');
+      container.innerHTML = '';
+      workExperience.forEach(job => {
+        const div = document.createElement('div');
+        div.classList.add('job');
+        const title = `<h4>${job.title} <span>${job.years}</span></h4>`;
+        const ul = document.createElement('ul');
+        job.details.forEach(detail => {
+          const li = document.createElement('li');
+          li.innerText = detail;
+          ul.appendChild(li);
+        });
+        div.innerHTML = title;
+        div.appendChild(ul);
+        container.appendChild(div);
+      });
+    }
+
+    function renderReferences() {
+      const container = document.getElementById('reference-list');
+      container.innerHTML = '';
+      references.forEach(ref => {
+        const p = document.createElement('p');
+        p.innerHTML = `<strong>${ref.name}</strong> – ${ref.title} – ${ref.email}`;
+        container.appendChild(p);
+      });
+    }
+
+    function addDropdown(id, type) {
+      const container = document.getElementById(id);
+      const div = document.createElement('div');
+      div.className = 'new-entry';
+      const input = document.createElement('input');
+      input.placeholder = `Enter ${type}...`;
+
+      const saveBtn = document.createElement('button');
+      saveBtn.innerText = "Save";
+      saveBtn.onclick = function () {
+        const value = input.value.trim();
+        if (!value) return;
+
+        if (type === "Skill") {
+          skills.push(value);
+        } else if (type === "Education") {
+          educationInfo.push({ years: "New Years", school: value });
+        } else if (type === "Work") {
+          workExperience.push({ title: value, years: "New", details: [] });
+        }
+
+        renderAll();
+        div.remove();
+      };
+
+      const removeBtn = document.createElement('button');
+      removeBtn.innerText = "Remove";
+      removeBtn.onclick = () => div.remove();
+
+      div.appendChild(input);
+      div.appendChild(saveBtn);
+      div.appendChild(removeBtn);
+      container.appendChild(div);
+    }
+
+    function renderAll() {
+      renderList('contact-list', contactInfo, 'li');
+      renderEducation();
+      renderList('skills-list', skills, 'li');
+      renderList('languages-list', languages, 'li');
+      renderWorkExperience();
+      renderReferences();
+    }
+  </script>
+</body>
+</html>
+
+
+
